@@ -15,8 +15,10 @@
 **Kickoff prompt (change the module id):**
 ```text
 You are building Infra Copilot. Read Specs.md §0, §1 and ONLY the sections named in the "Read:" line of
-module M2 in §9 — do not read the rest of the file. Work only on module M2. Follow the Agent Protocol
-in §0.2. Stop at the end of the module and report in at most 10 lines: done, not done, decisions logged.
+module M0 in §9 — do not read the rest of the file. Work only on module M0. Follow the Agent Protocol
+in §0.2. M0-T01..T06 were already built in an earlier pass and are unticked again: for each one, check the
+existing code against its AC and tick it if it holds; do not rebuild what exists. Only M0-T07 is new work.
+Stop at the end of the module and report in at most 10 lines: done, not done, decisions logged.
 ```
 
 ### 0.2 Agent protocol
@@ -376,14 +378,14 @@ No test calls a real LLM. No coverage percentage is enforced; every task's AC ma
 ## 9. Implementation plan (modules)
 Order: M0 → M1 → M2 → M3 → M4 → **M5 (core RAG gate)** → M6 → M7 → M8 → M9. **MVP complete = every gate passes.** Stretch work is listed at the end.
 
-### M0 — Foundation (mostly done)
+### M0 — Foundation (not started)
 **Depends on:** none · **Read:** §3.1, §2.3
-- [x] **M0-T01** · Repository skeleton, `.gitignore`, `.editorconfig`, MIT `LICENSE`, README stub.
-- [x] **M0-T02** · Backend scaffold: `uv` project (Python 3.12), FastAPI app factory, `GET /health` stub, `ruff`, `mypy`, `pytest` configured.
-- [x] **M0-T03** · `core/config.py` with `pydantic-settings`; `.env.example`.
-- [x] **M0-T04** · Structured JSON logging, request-id middleware, uniform error handler (§6.1 format).
-- [x] **M0-T05** · Fixtures in `backend/tests/fixtures/`: sample repo (≥ 6 `.tf` incl. security groups, a DB without backups, a module; 4 K8s manifests incl. multi-doc; 2 workflows; a README) plus **hard** files (heredoc, braces in strings, CRLF, syntax error).
-- [x] **M0-T06** · `pre-commit` (ruff, gitleaks) and a skeleton `ci.yml` (lint + tests). Keep as is; do not extend.
+- [ ] **M0-T01** · Repository skeleton, `.gitignore`, `.editorconfig`, MIT `LICENSE`, README stub.
+- [ ] **M0-T02** · Backend scaffold: `uv` project (Python 3.12), FastAPI app factory, `GET /health` stub, `ruff`, `mypy`, `pytest` configured.
+- [ ] **M0-T03** · `core/config.py` with `pydantic-settings`; `.env.example`.
+- [ ] **M0-T04** · Structured JSON logging, request-id middleware, uniform error handler (§6.1 format).
+- [ ] **M0-T05** · Fixtures in `backend/tests/fixtures/`: sample repo (≥ 6 `.tf` incl. security groups, a DB without backups, a module; 4 K8s manifests incl. multi-doc; 2 workflows; a README) plus **hard** files (heredoc, braces in strings, CRLF, syntax error).
+- [ ] **M0-T06** · `pre-commit` (ruff, gitleaks) and a skeleton `ci.yml` (lint + tests). Keep as is; do not extend.
 - [ ] **M0-T07** · **Lean cleanup:** remove the Postgres/SQLAlchemy/Alembic code and dependencies, `docker-compose.yml`, `frontend/` (Next.js), Redis/Celery references and the Makefile/`make.bat`; update `.env.example` to §2.3; add `store/db.py` creating the §3.2 schema in SQLite; add `Streamlit`, `numpy`, `rank_bm25`, `matplotlib`, `sentence-transformers` to `pyproject.toml`; keep fixtures, config, logging and error handling; all remaining tests green.
 
 **AC:** `uv sync -q && uv run pytest -q` passes · `uv run uvicorn app.main:app` serves `/health` · no references to Postgres/Docker/Next.js remain in code or docs (except the stretch list).
